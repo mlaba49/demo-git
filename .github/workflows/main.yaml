@@ -43,7 +43,7 @@ jobs:
       DOCKER_USER: ${{ secrets.DOCKER_USER }}
     steps:
       - uses: actions/checkout@v2
-      - run: echo $DOCKER_TOKEN | docker login -u DOCKER_USER --password-stdin
+      - run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
       - run: docker image build -f ../dockerfile -t dockerdemo ..
       - run: docker image tag dockerdemo mlaba49/dockerdemo
       - run: docker image push mlaba49/dockerdemo
