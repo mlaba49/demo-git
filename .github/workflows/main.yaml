@@ -1,0 +1,36 @@
+defaults:
+  run:
+    working-directory: aspnet
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: dotnet restore
+      - run: dotnet build
+
+  test:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: dotnet test
+  
+  pack:
+    needs:
+      - build
+      - test
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo DOCKER_TOKEN | docker login -u DOCKER_USER --password-stdin
+      - run: docker image build -f ../dockerfile -t dockerdemo ../
+      - run: docker image tag dockerdemo mlaba49/dockerdemo
+      - run: docker image push mlaba49/dockerdemo
+      - run: docker logout
+
+on: push
