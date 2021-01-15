@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: dotnet test
+      - run: dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover
   
   analyze:
     needs: [build, test]
@@ -29,7 +29,7 @@ jobs:
       - run: |
           dotnet sonarscanner begin /k:'mlaba49_demo-git' /o:'mlaba49' /d:sonar.host.url='https://sonarcloud.io/' /d:sonar.login=$SONARCLOUD_TOKEN
           dotnet build
-          dotnet test
+          dotnet test -p:CollectCoverage=true -p:CoverletOutputFormat=opencover --logger=trx
           dotnet sonarscanner end /d:sonar.login=$SONARCLOUD_TOKEN
   
   pack:
