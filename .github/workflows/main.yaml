@@ -21,12 +21,12 @@ jobs:
     needs: [build, test]
     runs-on: ubuntu-20.04
     env:
-      SONARCLOUD_TOKEN: $ {{ secrets.michaelToken }}
+      SONARCLOUD_TOKEN: ${{ secrets.michaelToken }}
     steps:
       - uses: actions/checkout@v2
       - run: dotnet tool install --global dotnet-sonarscanner
       - run: |
-          dotnet sonarscanner begin /k:'mlaba49_demo-git' /o:'mlaba49' /d:sonar.login=$SONARCLOUD_TOKEN
+          dotnet sonarscanner begin /k:'mlaba49_demo-git' /o:'mlaba49' /d:sonar.host='https://sonarcloud.io/ /d:sonar.login=$SONARCLOUD_TOKEN'
           dotnet build
           dotnet test
           dotnet sonarscanner end /d:sonar.login=$SONARCLOUD_TOKEN
